@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public interface SupplierService {
-    List<SearchResponseDTO> findByFiltering(searchInformationDTO searchInformationDTO) throws LocationNotFoundException, ManufacturesNotFound;
+    List<SearchResponseDTO> findByFiltering(searchInformationDTO searchInformationDTO, Integer pageNumber, Integer pageSize) throws LocationNotFoundException, ManufacturesNotFound;
 
 
 

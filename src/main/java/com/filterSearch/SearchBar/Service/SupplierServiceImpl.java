@@ -12,6 +12,9 @@ import com.filterSearch.SearchBar.models.Location;
 import com.filterSearch.SearchBar.models.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,11 +35,15 @@ public class SupplierServiceImpl implements SupplierService {
 
 
     @Override
-    public List<SearchResponseDTO> findByFiltering(searchInformationDTO searchInformationDTO) throws LocationNotFoundException, ManufacturesNotFound {
+    public List<SearchResponseDTO> findByFiltering(searchInformationDTO searchInformationDTO, Integer pageNumber, Integer pageSize) throws LocationNotFoundException, ManufacturesNotFound {
 
-        // check for no manufactures found
-        List<Supplier> suppliers = supplierRepository.findByNatureOfBussinessAndManufacturingProcessesAndLocation_Country(searchInformationDTO.getNature(), searchInformationDTO.getManufacture(),searchInformationDTO.getCountry());
-        if(suppliers.size()==0){
+        //pagination
+
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+
+        Page<Supplier> pageSuppliers = this.supplierRepository.findByNatureOfBussinessAndManufacturingProcessesAndLocation_Country(searchInformationDTO.getNature(), searchInformationDTO.getManufacture(),searchInformationDTO.getCountry(), p);
+        List<Supplier> suppliers = pageSuppliers.getContent();
+        if(suppliers.isEmpty()){
             throw new ManufacturesNotFound("no manufactures found of this type");
         }
 
@@ -52,16 +59,22 @@ public class SupplierServiceImpl implements SupplierService {
     private List<SearchResponseDTO> santizeInputDTO(searchInformationDTO searchInformationDTO, List<Supplier>suppliers){
 
         List<SearchResponseDTO> l =new ArrayList<>();
-        for(Supplier s : suppliers){
-            SearchResponseDTO searchResponseDTO = SearchResponseDTO.builder()
-                    .supplier_id(s.getSupplier_id())
-                    .bussiness_nature(s.getNatureOfBussiness())
-                    .manufacture_process(s.getManufacturingProcesses())
-                    .company_name(s.getCompanyName())
-                    .country(s.getLocation().getCountry())
-                    .website(s.getWebsite())
-                    .build();
-            l.add(searchResponseDTO);
+        try{
+            for (Supplier s : suppliers) {
+                SearchResponseDTO searchResponseDTO = SearchResponseDTO.builder()
+                        .supplier_id(s.getSupplier_id())
+                        .bussiness_nature(s.getNatureOfBussiness())
+                        .manufacture_process(s.getManufacturingProcesses())
+                        .company_name(s.getCompanyName())
+                        .country(s.getLocation().getCountry())
+                        .website(s.getWebsite())
+                        .build();
+                l.add(searchResponseDTO);
+            }
+
+        }catch(Exception ex) {
+            ex.printStackTrace();
+            log.error("could not sanitze the dto");
         }
         return l;
     }

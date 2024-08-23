@@ -21,8 +21,11 @@ public class SupplierController {
     private SupplierService supplierService;
 
     @PostMapping("/search")
-    public ResponseEntity<List<SearchResponseDTO>> fetchSupplierByFilter(@RequestBody searchInformationDTO searchInformationDTO) throws ManufacturesNotFound, LocationNotFoundException {
-        List<SearchResponseDTO> searchResponseDTOList = supplierService.findByFiltering(searchInformationDTO);
+    public ResponseEntity<List<SearchResponseDTO>> fetchSupplierByFilter(@RequestBody searchInformationDTO searchInformationDTO,
+                                                                         @RequestParam(value ="pageNumber", defaultValue = "1", required = false) Integer pageNumber,
+                                                                         @RequestParam(value = "pageSize" , defaultValue = "5", required = false) Integer pageSize
+                                                                         ) throws ManufacturesNotFound, LocationNotFoundException {
+        List<SearchResponseDTO> searchResponseDTOList = supplierService.findByFiltering(searchInformationDTO, pageNumber, pageSize);
         return ResponseEntity.ok(searchResponseDTOList);
     }
 
