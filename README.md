@@ -52,12 +52,11 @@ Service for filtering manufacturers based on criteria using a Spring Boot applic
 - **URL:** `POST /api/supplier/search`
 - **Request Body:**
     ```json
-    
-{
+     {
   "nature": "medium_scale",
   "manufacture": "moulding",
   "country": "India"
-}
+    }
     ```
 
 ## Entities
