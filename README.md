@@ -32,7 +32,7 @@ Service for filtering manufacturers based on criteria using a Spring Boot applic
     "nature": "medium_scale",
     "manufacture": "casting",
     "country": "India"
-}
+    }
     ```
 
     
@@ -44,7 +44,7 @@ Service for filtering manufacturers based on criteria using a Spring Boot applic
     "nature": "medium_scale",
     "manufacture": "casting",
     "country": "India"
-}
+    }
     ```
 
 ### Testing Exception Handling
@@ -56,7 +56,7 @@ Service for filtering manufacturers based on criteria using a Spring Boot applic
   "nature": "medium_scale",
   "manufacture": "moulding",
   "country": "India"
-}
+    }
     ```
 
 ## Entities
